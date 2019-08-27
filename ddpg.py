@@ -32,14 +32,13 @@ class Actor(nn.Module):
         self.w_l2 = nn.Linear(l1, l2)
         if self.args.use_ln: self.lnorm2 = LayerNorm(l2)
 
-
         #Out
         self.w_out = nn.Linear(l3, args.action_dim)
 
         #Init
-        if init:
-            self.w_out.weight.data.mul_(0.1)
-            self.w_out.bias.data.mul_(0.1)
+        # if init:
+        #     self.w_out.weight.data.mul_(0.1)
+        #     self.w_out.bias.data.mul_(0.1)
 
 
     def forward(self, input):
@@ -47,16 +46,19 @@ class Actor(nn.Module):
         #Hidden Layer 1
         out = self.w_l1(input)
         if self.args.use_ln: out = self.lnorm1(out)
-        out = F.tanh(out)
+        # out = F.tanh(out)
+        out = torch.tanh(out)
 
         #Hidden Layer 2
         out = self.w_l2(out)
         if self.args.use_ln: out = self.lnorm2(out)
-        out = F.tanh(out)
+        # out = F.tanh(out)
+        out = torch.tanh(out)
 
 
         #Out
-        out = F.tanh(self.w_out(out))
+        # out = F.tanh(self.w_out(out))
+        out = self.w_out(out)
         return out
 
 
