@@ -72,10 +72,12 @@ def trainModel(parameters, env):
         done = False
         # Start of time-steps
         while not done:
-            action = agent.actor.forward(state)
+            with torch.no_grad():
+                action = agent.actor.forward(state)
             # Clamp the actions to that of what the env can use
             action.clamp(env.action_space.low[0], env.action_space.high[0])
             action = utils.to_numpy(action)
+            #print(action)
 
             is_action_noise = True
             if is_action_noise: action += ounoise.noise()
